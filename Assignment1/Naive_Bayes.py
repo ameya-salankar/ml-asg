@@ -11,7 +11,7 @@ import re
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 
-df = pd.read_csv("a1_d3.txt", header = None, delimiter = '\t')
+df = pd.read_csv("./a1_data/a1_d3.txt", header = None, delimiter = '\t')
           
 #print(np.array_split(df,5))
 #print(type(np.array_split(df, 5)))

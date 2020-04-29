@@ -11,6 +11,8 @@ import re
 from sklearn.model_selection import KFold
 
 df = pd.read_csv("./a1_data/a1_d3.txt", header = None, delimiter = '\t')
+
+stop_words = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they", "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing", "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with", "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from", "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there", "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don", "should", "now"]
           
 #print(np.array_split(df,5))
 #print(type(np.array_split(df, 5)))
@@ -35,6 +37,8 @@ for train, test in kf.split(df):
         words = s.split()
         if row[1]==1:
             for e in words:
+                if e in stop_words:
+                    continue
                 if e in pos_bag:
                     bag[e] += 1
                     pos_bag[e] += 1
@@ -47,6 +51,8 @@ for train, test in kf.split(df):
                 
         else:
             for e in words:
+                if e in stop_words:
+                    continue
                 if e in neg_bag:
                     bag[e] += 1
                     neg_bag[e] += 1
@@ -68,6 +74,7 @@ for train, test in kf.split(df):
     fp = 0
     fn = 0
     
+    
     for index, row in df_test.iterrows():
         wrds = re.sub("[^a-zA-Z]+", " ", row[0]).lower().split()
 #        print(wrds)
@@ -75,6 +82,8 @@ for train, test in kf.split(df):
         t_n = 1 #total negative probability
         
         for word in wrds:
+            if word in stop_words:
+                continue
             p = ((pos_bag[word] if word in pos_bag else 0) + 1)/(pbag_sz + bag_sz + 1)
             n = ((neg_bag[word] if word in neg_bag else 0) + 1)/(nbag_sz + bag_sz + 1)
 #            print(p, n)
@@ -93,7 +102,7 @@ for train, test in kf.split(df):
         elif t_p < t_n and row[1] == 1:
             fn += 1
             
-    acc = count/len(df_test)
+    acc = count/(len(df_test))
     print("Accuracy =", acc)
     ans[i] = acc
     i += 1

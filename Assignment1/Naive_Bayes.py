@@ -62,6 +62,10 @@ for train, test in kf.split(df):
     nbag_sz = len(neg_bag)
 #    print(vocab_sz)
     
+    bag_sum = sum(bag.values());
+    pbag_sum = sum(pos_bag.values());
+    nbag_sum = sum(neg_bag.values())
+    
     count = 0
     tp = 0
     tn = 0
@@ -75,8 +79,8 @@ for train, test in kf.split(df):
         t_n = 1 #total negative probability
         
         for word in wrds:
-            p = ((pos_bag[word] if word in pos_bag else 0) + 1)/(pbag_sz + bag_sz + 1)
-            n = ((neg_bag[word] if word in neg_bag else 0) + 1)/(nbag_sz + bag_sz + 1)
+            p = ((pos_bag[word] if word in pos_bag else 0) + 1)/(pbag_sum + pbag_sz + 1)
+            n = ((neg_bag[word] if word in neg_bag else 0) + 1)/(nbag_sum + nbag_sz + 1)
 #            print(p, n)
             t_p = t_p * p
             t_n = t_n * n
